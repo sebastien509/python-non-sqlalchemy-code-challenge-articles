@@ -1,17 +1,17 @@
 class Article:
-
-    all_articles = []
+    all= []
 
     def __init__(self, author, magazine, title):
-        self._title = title
-        self._author = author
-        self._magazine = magazine
-        
-        Article.all_articles.append(self)
+        if not isinstance(author, Author):
+            raise ValueError("Author must be an instance of Author")
+        if not isinstance(magazine, Magazine):
+            raise ValueError("Magazine must be an instance of Magazine")
         if not isinstance(title, str) or not (5 <= len(title) <= 50):
             raise ValueError("Title must be a string between 5 and 50 characters")
-        
-
+        self._author = author
+        self._magazine = magazine
+        self._title = title
+        Article.all.append(self)
 
     @property
     def title(self):
@@ -37,6 +37,7 @@ class Article:
             raise ValueError("Magazine must be an instance of Magazine")
         self._magazine = value
         
+
 class Author:
     def __init__(self, name):
         if not isinstance(name, str) or len(name) == 0:
@@ -63,7 +64,6 @@ class Author:
             return None
         return list({magazine.category for magazine in self.magazines()})
     
-
 class Magazine:
     def __init__(self, name, category):
         if not isinstance(name, str) or not (2 <= len(name) <= 16):
@@ -109,3 +109,4 @@ class Magazine:
         for article in self.articles():
             contributors[article.author] += 1
         return [author for author, count in contributors.items() if count > 2] or None
+
