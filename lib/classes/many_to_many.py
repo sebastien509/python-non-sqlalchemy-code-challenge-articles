@@ -2,20 +2,23 @@ class Article:
     all= []
 
     def __init__(self, author, magazine, title):
-        if not isinstance(author, Author):
-            raise ValueError("Author must be an instance of Author")
-        if not isinstance(magazine, Magazine):
-            raise ValueError("Magazine must be an instance of Magazine")
-        if not isinstance(title, str) or not (5 <= len(title) <= 50):
-            raise ValueError("Title must be a string between 5 and 50 characters")
-        self._author = author
-        self._magazine = magazine
+        self.author = author
+        self.magazine = magazine
         self._title = title
         Article.all.append(self)
 
     @property
     def title(self):
         return self._title
+
+    @title.setter
+    def title(self, _title):
+        if not isinstance(_title, str) or not (5 <= len(_title) <= 50):
+            raise ValueError("Title must be a string between 5 and 50 characters")
+        if hasattr(self, '_title'):
+            raise Exception("Title is immutable and cannot be reassigned.")
+        return _title
+
 
     @property
     def author(self):
@@ -40,13 +43,21 @@ class Article:
 
 class Author:
     def __init__(self, name):
-        if not isinstance(name, str) or len(name) == 0:
-            raise ValueError("Name must be a non-empty string")
         self._name = name
 
     @property
     def name(self):
         return self._name
+
+    @name.setter
+    def name(self, _name):
+        if hasattr(self, '_name'):
+            raise Exception
+        if not isinstance(_name, str) or not len(_name) == 0:
+            raise Exception("Name must be a non-empty string")
+        return _name
+        
+
 
     def articles(self):
         return [article for article in Article.all if article.author == self]
@@ -78,10 +89,10 @@ class Magazine:
         return self._name
 
     @name.setter
-    def name(self, value):
-        if not isinstance(value, str) or not (2 <= len(value) <= 16):
+    def name(self, new_value):
+        if not isinstance(new_value, str) or not (2 <= len(new_value) <= 16):
             raise ValueError("Name must be a string between 2 and 16 characters")
-        self._name = value
+        self._name = new_value
 
     @property
     def category(self):
